@@ -1,0 +1,11 @@
+DEPENDENCIES = \
+tankFixedMotionFunction/tankFixedMotionFunction.dep\
+integratedVelocityMotionFunction/integratedVelocityMotionFunction.dep\
+tankFreeMotionFunction/tankFreeMotionFunction.dep\
+propellerMotionFunction/propellerMotionFunction.dep\
+PiroSolidBodyMotionFvMesh/PiroSolidBodyMotionFvMesh.dep\
+PiroSolidBodyMotionFvMesh/tankFreeMultiSolidBodyMotionFvMesh.dep\
+$(solidBodyMotionFunctions)/PiroSolidBodyMotionFunction/PiroSolidBodyMotionFunction.dep\
+$(solidBodyMotionFunctions)/PiroSolidBodyMotionFunction/newPiroSolidBodyMotionFunction.dep\
+$(solidBodyMotionFunctions)/rigidBody6DoFMotion/rigidBody6DoFMotion.dep\
+$(solidBodyMotionFunctions)/surfaceRegionMotion/surfaceRegionMotion.dep

@@ -1,0 +1,76 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 2.4.x-2b147f41daf9
+Exec   : extrudeToRegionMesh
+Date   : Apr 18 2016
+Time   : 10:43:34
+Host   : "name-larkin"
+PID    : 10950
+Case   : /home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+Selecting extrudeModel linearNormal
+Extruding zones 1(freesurface_zone) on mesh region0 into shell mesh surface
+Testing:"/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/system/surface/fvSchemes"
+Writing meshes to 0.001
+
+Zone freesurface_zone has boundary faces
+extrudePatch : faces:2205 points:2468 edges:4673
+
+Adding coupling patches:
+
+patchID	patch	type
+-------	-----	----
+6	freesurface_zone_top	patch
+7	region0_to_surface_freesurface_zone	mappedWall
+Added 2 inter-region patches.
+
+Adding coupling patches:
+
+patchID	patch	type
+-------	-----	----
+6	freesurface_zone_top	patch
+7	region0_to_surface_freesurface_zone	mappedWall
+Added 2 inter-region patches.
+
+Adding patches for sides on zones:
+
+patchID	patch
+-------	-----
+Added 0 zone-side patches.
+
+Adding inter-zone patches:
+
+patchID	patch
+-------	-----
+Added 0 inter-zone patches.
+
+Adding processor or cyclic patches:
+
+patchID	patch
+-------	-----
+Added 0 coupled patches.
+
+Deleting patch 3 name:freesurface
+Deleting patch 4 name:bottom
+Writing mesh surface to "0.001"
+
+Deleting patch 3 name:freesurface
+Deleting patch 6 name:freesurface_zone_top
+Writing mesh region0 to "0.001"
+
+End
+

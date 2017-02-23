@@ -1,0 +1,39 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 2.4.x-2b147f41daf9
+Exec   : topoSet
+Date   : Apr 18 2016
+Time   : 10:43:34
+Host   : "name-larkin"
+PID    : 10949
+Case   : /home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create polyMesh for time = 0
+
+Reading topoSetDict
+
+Time = 0
+    mesh not changed.
+Created faceSet freesurface_set
+    Applying source boxToFace
+    Adding faces with centre within boxes 1((-100 -100 -10) (100 100 0.0001))
+    faceSet freesurface_set now size 2205
+Created faceZoneSet freesurface_zone
+    Applying source setToFaceZone
+    Adding all faces from faceSet freesurface_set ...
+    faceZoneSet freesurface_zone now size 2205
+
+End
+

@@ -1,0 +1,5 @@
+SOURCE = \
+surfaceHeightSolver/surfaceHeightSolver.C \
+freeSurfacePressure/freeSurfacePressureFvPatchScalarField.C \
+freeSurfaceHeight/freeSurfaceHeightFvPatchScalarField.C \
+freeSurfacePimpleDyMFoam.C 

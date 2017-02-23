@@ -1,0 +1,4 @@
+LOCAL_OBJECTS = \
+surfaceHeightSolver.o\
+freeSurfacePressureFvPatchScalarField.o\
+freeSurfaceSimpleFoam.o

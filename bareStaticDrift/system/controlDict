@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     freeSurfacePimpleDyMFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         60;
+
+deltaT          0.001;
+
+writeControl    adjustableRunTime;
+
+writeInterval   2;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  on;
+
+maxCo           2;
+//maxAlphaCo      5;
+
+maxDeltaT       0.05;
+
+libs ("librigidBody6DoFMotion.so");
+
+functions
+(
+   forces
+   {
+      type forces;                              // To Set the forces calculation
+      functionObjectLibs ("libforces.so");      // To Set which lib must use 
+      outputControl timeStep;                   // To set when computate outputTime/timeStep
+      outputInterval 1;
+      patches ( hull );                         // Name of patches to integrate forces (.. .. ..)
+      pName p;                                  // Name of pressure Field (if omit default p)
+      UName U;                                  // Name of velocity Field (if omit default U)
+      log false;                                // To Set if write results on default Info (if omit do not write)
+      rhoName rhoInf;                           // Name of rho Field (if omitted default rho, is used not explicit but internal rho)
+      rhoInf 1000.0;                            // Reference density for fluid (Used only if 'rhoName rhoInf') (Can't be omitted) 
+      CofR (0 0 0);                             // Origin for moment calculations
+   }
+);
+
+//************************************************************* //

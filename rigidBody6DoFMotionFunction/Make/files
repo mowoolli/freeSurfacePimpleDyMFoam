@@ -1,0 +1,14 @@
+tankFixedMotionFunction/tankFixedMotionFunction.C
+integratedVelocityMotionFunction/integratedVelocityMotionFunction.C
+tankFreeMotionFunction/tankFreeMotionFunction.C
+propellerMotionFunction/propellerMotionFunction.C
+
+PiroSolidBodyMotionFvMesh/PiroSolidBodyMotionFvMesh.C
+PiroSolidBodyMotionFvMesh/tankFreeMultiSolidBodyMotionFvMesh.C
+solidBodyMotionFunctions = PiroSolidBodyMotionFvMesh/PiroSolidBodyMotionFunctions
+$(solidBodyMotionFunctions)/PiroSolidBodyMotionFunction/PiroSolidBodyMotionFunction.C
+$(solidBodyMotionFunctions)/PiroSolidBodyMotionFunction/newPiroSolidBodyMotionFunction.C
+$(solidBodyMotionFunctions)/rigidBody6DoFMotion/rigidBody6DoFMotion.C
+$(solidBodyMotionFunctions)/surfaceRegionMotion/surfaceRegionMotion.C
+
+LIB = $(FOAM_USER_LIBBIN)/librigidBody6DoFMotionFunction

@@ -1,0 +1,47 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.x                                 |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      motionProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh rigidBody6DoFMotionFvMesh;
+
+rigidBody6DoFMotionFvMeshCoeffs
+{
+    mass             500;
+    m_a              (0 0 650);
+    CofG             (0.005 0 1.0238038);
+    I                (31.25 0 0 31.25 0 31.25);
+    I_a              (40.625 40.625 0);
+    x0               (0 0 0);
+    v0               (0 0 0);
+    theta0           (0 0 0);
+    omega0           (0 0 0);
+    translationFree  (0 0 1);
+    rotationFree     (1 1 0);
+    k                (0 0 0);
+    K_t              (0 0 0);
+    c                (0 0 0);
+    C_t              (0 0 0);
+    relaxation       1.0;
+    order            1;
+    
+    forces
+    {
+        patches      ( box );
+        rhoInf       1.0;
+        CofR         (0.0 0 1.2738038);
+    }
+}
+
+// ************************************************************************* //

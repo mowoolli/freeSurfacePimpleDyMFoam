@@ -1,0 +1,1 @@
+These are top-level solvers and fvMesh files that were not altered after the code was obtained. Credit goes to Dominic Piro, Kevin Maki, and Greg Filip for their existence (it is believed...). For development, they can be moved up one level, and added to the 'Make/files' or 'Allwmake' compilation files. 

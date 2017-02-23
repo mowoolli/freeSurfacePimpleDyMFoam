@@ -1,0 +1,5 @@
+LOCAL_OBJECTS = \
+tankFixedMotionFunction.o\
+integratedVelocityMotionFunction.o\
+propellerCrashbackMotionFunction.o\
+propellerMotionFunction.o

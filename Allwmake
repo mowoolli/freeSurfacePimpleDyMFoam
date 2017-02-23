@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "Compiling solver..."
+wclean && wmake
+echo "Solver compiled."
+
+echo "Compiling dynamicFvMesh..."
+cd dynamicFvMesh
+wclean && wmake
+cd ..
+echo "dynamicFvMesh compiled."
+
+echo "Compiling solidBodyMotionFunctions..."
+cd dynamicFvMesh/solidBodyMotionFunctions
+wclean && wmake
+cd ../..
+echo "solidBodyMotionFunctions compiled."

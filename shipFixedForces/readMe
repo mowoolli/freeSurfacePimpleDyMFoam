@@ -1,0 +1,1 @@
+This is an incomplete attempt at writing the forces in a ship-fixed reference frame to coincide with the translating and rotating mesh. By default, the forces are written in an Earth-fixed reference frame which is not always ideal for post-processing.

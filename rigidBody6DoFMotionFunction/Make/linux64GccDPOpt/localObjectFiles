@@ -1,0 +1,11 @@
+LOCAL_OBJECTS = \
+tankFixedMotionFunction.o\
+integratedVelocityMotionFunction.o\
+tankFreeMotionFunction.o\
+propellerMotionFunction.o\
+PiroSolidBodyMotionFvMesh.o\
+tankFreeMultiSolidBodyMotionFvMesh.o\
+PiroSolidBodyMotionFunction.o\
+newPiroSolidBodyMotionFunction.o\
+rigidBody6DoFMotion.o\
+surfaceRegionMotion.o

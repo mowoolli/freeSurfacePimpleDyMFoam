@@ -1,0 +1,5 @@
+OBJECTS = \
+$(OBJECTS_DIR)/surfaceHeightSolver.o\
+$(OBJECTS_DIR)/freeSurfacePressureFvPatchScalarField.o\
+$(OBJECTS_DIR)/freeSurfaceHeightFvPatchScalarField.o\
+$(OBJECTS_DIR)/freeSurfacePimpleDyMFoam.o

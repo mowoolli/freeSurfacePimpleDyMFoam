@@ -1,0 +1,82 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 2.4.x-2b147f41daf9
+Exec   : surfaceFeatureExtract
+Date   : Apr 18 2016
+Time   : 10:43:22
+Host   : "name-larkin"
+PID    : 10947
+Case   : /home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Reading surfaceFeatureExtractDict
+
+Surface            : "testHull.stl"
+
+
+Feature line extraction is only valid on closed manifold surfaces.
+Statistics:
+Triangles    : 94
+Vertices     : 49
+Bounding Box : (-2 -0.5 -0.75) (2 0.5 0.5)
+
+
+Constructing feature set from included angle 150
+Selecting edges purely based on geometric tests: no
+
+Initial feature set:
+    feature points : 10
+    feature edges  : 40
+    of which
+        region edges   : 0
+        external edges : 40
+        internal edges : 0
+
+
+Final feature set:
+    points : 35
+    of which
+        convex             : 10
+        concave            : 0
+        mixed              : 0
+        non-feature        : 25
+    edges  : 40
+    of which
+        external edges     : 40
+        internal edges     : 0
+        flat edges         : 0
+        open edges         : 0
+        multiply connected : 0
+
+Writing extendedFeatureEdgeMesh to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull.extendedFeatureEdgeMesh"
+
+Writing extendedEdgeMesh components to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull"
+Writing convex feature points to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_convexFeaturePts.obj"
+Writing concave feature points to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_concaveFeaturePts.obj"
+Writing mixed feature points to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_mixedFeaturePts.obj"
+Writing mixed feature point structure to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_mixedFeaturePtsStructure.obj"
+Writing external edges to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_externalEdges.obj"
+Writing internal edges to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_internalEdges.obj"
+Writing flat edges to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_flatEdges.obj"
+Writing open edges to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_openEdges.obj"
+Writing multiple edges to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_multipleEdges.obj"
+Writing region edges to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_regionEdges.obj"
+Writing edge directions to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/extendedFeatureEdgeMesh/testHull_edgeDirections.obj"
+
+Writing featureEdgeMesh to "/home/mowoolli/OpenFOAM/mowoolli-2.4.x/run/research/freeSurfacePimpleDyMFoam/testCase/constant/triSurface/testHull.eMesh"
+
+ExecutionTime = 0.06 s  ClockTime = 0 s
+
+End
+

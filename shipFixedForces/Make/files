@@ -1,0 +1,4 @@
+forces.C
+forcesFunctionObject.C
+
+LIB = $(FOAM_USER_LIBBIN)/libshipFixedForces

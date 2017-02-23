@@ -1,0 +1,6 @@
+tankFixedMotionFunction/tankFixedMotionFunction.C
+integratedVelocityMotionFunction/integratedVelocityMotionFunction.C
+propellerCrashbackMotionFunction/propellerCrashbackMotionFunction.C
+propellerMotionFunction/propellerMotionFunction.C
+
+LIB = $(FOAM_USER_LIBBIN)/librigidBody6DoFMotionFunction

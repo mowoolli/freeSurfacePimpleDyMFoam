@@ -1,0 +1,5 @@
+LOCAL_OBJECTS = \
+surfaceHeightSolver.o\
+freeSurfacePressureFvPatchScalarField.o\
+freeSurfaceHeightFvPatchScalarField.o\
+freeSurfacePimpleDyMFoam.o

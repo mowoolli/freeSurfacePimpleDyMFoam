@@ -1,0 +1,66 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.x                                 |
+|   \\  /    A nd           | Revision: 1860                                  |
+|    \\/     M anipulation  | Web:      http://www.OpenFOAM.org               |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+//    location    "0";
+    object      eta;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 0 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    outlet
+    {
+        type            zeroGradient;
+    }
+    bottom
+    {
+        type            zeroGradient;
+    }
+    hull  
+    {
+        type            zeroGradient;
+/*
+        type            freeSurfaceHeight;
+//        waterHeight     0;
+        CtranPow        1;
+        CtranOff        0.3;
+        CtranMul        0.1;
+        value           uniform -0.02;
+*/
+    }
+    farfield
+    {
+        type            zeroGradient;
+    }
+    freesurface_zone_top
+    {
+        type            zeroGradient;
+    }
+
+    region0_to_surface_freesurface_zone
+    {
+        type            fixedValue;
+        value           uniform 0.025;
+    }
+}
+
+
+// ************************************************************************* //

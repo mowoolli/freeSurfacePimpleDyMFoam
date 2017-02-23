@@ -1,0 +1,3 @@
+LOCAL_OBJECTS = \
+forces.o\
+forcesFunctionObject.o

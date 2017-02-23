@@ -1,0 +1,184 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.5                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    pcorr
+    {
+        /*solver           GAMG;
+        tolerance        1e-7;
+        relTol           0.0;
+
+        smoother         DIC;//GaussSeidel;
+        nPreSweeps       0;
+        nPostSweeps      2;
+        nFinestSweeps    2;
+
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 10;
+        agglomerator     faceAreaPair;
+        mergeLevels      1;*/
+        
+        solver           PCG;
+        preconditioner   DIC;
+        tolerance        1e-8;
+        relTol           0;
+    };
+
+    p_rgh
+    {
+        /*solver           GAMG;
+        tolerance        1e-7;
+        relTol           0.0;
+
+        smoother         DIC;//GaussSeidel;
+        nPreSweeps       0;
+        nPostSweeps      2;
+        nFinestSweeps    2;
+
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 10;
+        agglomerator     faceAreaPair;
+        mergeLevels      1;*/
+        
+        solver           PCG;
+        preconditioner   DIC;
+        tolerance        1e-8;
+        relTol           0;
+    };
+
+    p_rghFinal
+    {
+        /*solver           GAMG;
+        tolerance        1e-8;
+        relTol           0.0;
+
+        smoother         DIC;//GaussSeidel;
+        nPreSweeps       0;
+        nPostSweeps      2;
+        nFinestSweeps    2;
+
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 10;
+        agglomerator     faceAreaPair;
+        mergeLevels      1;*/
+        
+        solver           PCG;
+        preconditioner   DIC;
+        tolerance        1e-8;
+        relTol           0;
+    };
+
+    U
+    {
+        solver           PBiCG;
+        preconditioner   DILU;
+        tolerance        1e-09;
+        relTol           0;
+    };
+
+    UFinal
+    {
+        solver           PBiCG;
+        preconditioner   DILU;
+        tolerance        1e-09;
+        relTol           0;
+    };
+
+    alpha
+    {
+        solver           PBiCG;
+        preconditioner   DILU;
+        tolerance        1e-07;
+        relTol           0;
+    };
+    
+    // turbulence variables
+    k
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+    }
+    kFinal
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+    }
+
+    omega
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+    }
+    omegaFinal
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+    }
+
+    R
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+    }
+    RFinal
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+    }
+
+    nuTilda
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+    }
+    nuTildaFinal
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+    }
+}
+
+PIMPLE
+{
+    pdRefCell 0;
+    pdRefValue 0;
+    momentumPredictor yes;
+    nOuterCorrectors 3; 
+    nCorrectors     1;
+    nNonOrthogonalCorrectors 0;
+    nAlphaCorr      1;
+    nAlphaSubCycles 1;
+    cAlpha          1;
+}
+
+// ************************************************************************* //

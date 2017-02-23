@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|       o          |                                                          |
+|    o     o       | OpenFOAM (Engys Edition):                                |
+|   o   O   o      | Version: 2.2_engysEdition-beta                           |
+|    o     o       | Web:     http://www.engys.com                            |
+|       o          |                                                          |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "../constant";
+    object      regionProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+regions         ( fluid ( surface region0 ) );
+
+
+// ************************************************************************* //

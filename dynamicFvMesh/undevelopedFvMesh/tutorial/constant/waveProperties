@@ -1,0 +1,147 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.5                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      environmentalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+timeShift       0.0;
+
+seaLevel	0.00;
+
+wind            (0 0 0);
+
+// A list of the relaxation zones in the simulation. The parameters are given
+// in <name>Coeffs below.
+relaxationNames (inlet inletSide outlet outletSide);
+
+initializationName current;
+
+pName p_rgh;
+
+inletCoeffs
+{
+    waveType    combinedWaves;
+    combinedWaveNames ( waves );
+    //combinedWaveNames ( current );
+
+    // Specifications on the relaxation zone shape and relaxation scheme
+    relaxationZone
+    {
+        relaxationScheme Spatial;
+        relaxationShape  RectangularAdjustSigma;
+        beachType        Empty;
+    
+        relaxType   INLET;
+        startX      (-8.0 -5.5 0);
+        endX        (-4.0  5.5 0);
+        orientation      (1.0 0.0 0.0);
+        sigmaScale  0.1;
+    }
+};
+
+inletSideCoeffs
+{
+    waveType    combinedWaves;
+    combinedWaveNames ( waves );
+    //combinedWaveNames ( current );
+
+    // Specifications on the relaxation zone shape and relaxation scheme
+    relaxationZone
+    {
+        relaxationScheme Spatial;
+        relaxationShape  RectangularAdjustSigma;
+        beachType        Empty;
+    
+        relaxType   INLET;
+        startX      (-4.0 -5.5 0);
+        endX        ( 8.5 -2.5 0);
+        orientation      (0.0 1.0 0.0);
+        sigmaScale  0.1;
+    }
+};
+
+currentCoeffs
+{
+    waveType    potentialCurrent;
+    Tsoft       0;
+    U           (0 0 0);
+};
+
+wavesCoeffs
+{
+    // Wave type to be used at boundary "inlet" and in relaxation zone "inlet"
+//    waveType    stokesFirstwCurrent;
+    waveType    stokesFirst;
+    
+    // Ramp time of 2 s
+    Tsoft       2;
+
+    // Water depth at the boundary and in the relaxation zone
+    depth       3.5;
+
+    // Cyclic wave frequency
+    omega       5.23399;
+
+    // Phase shift in the wave
+    phi         0.000000;
+
+    // Wave number vector, k. 
+    waveNumber  (1.39626 2.41840 0.0);
+
+    // Wave height
+    height      0.04;
+
+//    current     (0.0 0 0);
+};
+
+outletCoeffs
+{
+    waveType    combinedWaves;
+    combinedWaveNames ( current );
+
+    relaxationZone
+    {
+        //relaxationScheme Spatial;
+        relaxationScheme Uonly;
+        relaxationShape  RectangularAdjustSigma;
+        beachType        Empty;    
+
+        relaxType   OUTLET;
+        startX      (5.0 -2.0 0);
+        endX        (8.5  3.5 0);
+        orientation      (1.0 0.0 0.0);
+        sigmaScale  0.1;
+    }
+};
+
+outletSideCoeffs
+{
+    waveType    combinedWaves;
+    combinedWaveNames ( current );
+
+    relaxationZone
+    {
+        //relaxationScheme Spatial;
+        relaxationScheme Uonly;
+        relaxationShape  RectangularAdjustSigma;
+        beachType        Empty;    
+
+        relaxType   OUTLET;
+        startX      (-3.5 3.5 0);
+        endX        ( 5.0 5.5 0);
+        orientation      (0.0 1.0 0.0);
+        sigmaScale  0.1;
+    }
+};
+
+// ************************************************************************* //

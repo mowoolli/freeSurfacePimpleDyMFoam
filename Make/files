@@ -1,0 +1,7 @@
+surfaceHeightSolver/surfaceHeightSolver.C
+freeSurfacePressure/freeSurfacePressureFvPatchScalarField.C
+freeSurfaceHeight/freeSurfaceHeightFvPatchScalarField.C
+
+freeSurfacePimpleDyMFoam.C 
+
+EXE = $(FOAM_APPBIN)/freeSurfacePimpleDyMFoam

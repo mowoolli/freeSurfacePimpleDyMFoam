@@ -1,0 +1,3 @@
+include surfaceHeightSolver/surfaceHeightSolver.dep
+include freeSurfacePressure/freeSurfacePressureFvPatchScalarField.dep
+include freeSurfacePimpleFoam.dep

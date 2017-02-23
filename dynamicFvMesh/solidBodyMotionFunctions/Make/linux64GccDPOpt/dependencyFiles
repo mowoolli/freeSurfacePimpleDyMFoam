@@ -1,0 +1,5 @@
+DEPENDENCIES = \
+tankFixedMotionFunction/tankFixedMotionFunction.dep\
+integratedVelocityMotionFunction/integratedVelocityMotionFunction.dep\
+propellerCrashbackMotionFunction/propellerCrashbackMotionFunction.dep\
+propellerMotionFunction/propellerMotionFunction.dep

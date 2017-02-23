@@ -1,0 +1,3 @@
+OBJECTS = \
+$(OBJECTS_DIR)/forces.o\
+$(OBJECTS_DIR)/forcesFunctionObject.o

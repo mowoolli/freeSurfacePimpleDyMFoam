@@ -1,0 +1,442 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright (C) 1991-2009 OpenCFD Ltd.
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by the
+    Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+\*---------------------------------------------------------------------------*/
+
+#include "rigidBody6DoFMotionFvMesh.H"
+#include "addToRunTimeSelectionTable.H"
+#include "volFields.H"
+#include "transformField.H"
+#include "Tuple2.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(rigidBody6DoFMotionFvMesh, 0);
+    addToRunTimeSelectionTable(dynamicFvMesh, rigidBody6DoFMotionFvMesh, IOobject);
+}
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// Create files to record body motion
+void Foam::rigidBody6DoFMotionFvMesh::makeFiles()
+{
+    // Create the position file if not already created
+    if (positionFilePtr_.empty())
+    {
+        if (debug)
+        {
+            Info<< "Creating position file." << endl;
+        }
+
+        // File update
+        if (Pstream::master())
+        {
+            fileName positionDir;
+            word startTimeName =
+                time().timeName(time().startTime().value());
+
+            if (Pstream::parRun())
+            {
+                // Put in undecomposed case (Note: gives problems for
+                // distributed data running)
+                positionDir = time().path()/".."/"RBmotion";
+            }
+            else
+            {
+                positionDir = time().path()/"RBmotion";
+            }
+
+            // Create directory if does not exist.
+            mkDir(positionDir);
+
+            // Open new file at start up
+            positionFilePtr_.reset(new OFstream(positionDir/"position.dat"));
+        }
+    }
+
+    // Create the velocity file if not already created
+    if (velocityFilePtr_.empty())
+    {
+        if (debug)
+        {
+            Info<< "Creating velocity file." << endl;
+        }
+
+        // File update
+        if (Pstream::master())
+        {
+            fileName velocityDir;
+            word startTimeName =
+                time().timeName(time().startTime().value());
+
+            if (Pstream::parRun())
+            {
+                // Put in undecomposed case (Note: gives problems for
+                // distributed data running)
+                velocityDir = time().path()/".."/"RBmotion";
+            }
+            else
+            {
+                velocityDir = time().path()/"RBmotion";
+            }
+
+            // Create directory if does not exist.
+            mkDir(velocityDir);
+
+            // Open new file at start up
+            velocityFilePtr_.reset(new OFstream(velocityDir/"velocity.dat"));
+        }
+    }
+
+    // Create the accel file if not already created
+    if (accelFilePtr_.empty())
+    {
+        if (debug)
+        {
+            Info<< "Creating acceleration file." << endl;
+        }
+
+        // File update
+        if (Pstream::master())
+        {
+            fileName accelDir;
+            word startTimeName =
+                time().timeName(time().startTime().value());
+
+            if (Pstream::parRun())
+            {
+                // Put in undecomposed case (Note: gives problems for
+                // distributed data running)
+                accelDir = time().path()/".."/"RBmotion";
+            }
+            else
+            {
+                accelDir = time().path()/"RBmotion";
+            }
+
+            // Create directory if does not exist.
+            mkDir(accelDir);
+
+            // Open new file at start up
+            accelFilePtr_.reset(new OFstream(accelDir/"accel.dat"));
+        }
+    }
+}
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::rigidBody6DoFMotionFvMesh::rigidBody6DoFMotionFvMesh(const IOobject& io)
+:
+    dynamicFvMesh(io),
+    dynamicMeshCoeffs_
+    (
+        IOdictionary
+        (
+            IOobject
+            (
+                "dynamicMeshDict",
+                io.time().constant(),
+                *this,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE
+            )
+        ).subDict(typeName + "Coeffs")
+    ),
+    undisplacedPoints_
+    (
+        IOobject
+        (
+            "points",
+            io.time().constant(),
+            meshSubDir,
+            *this,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    ),
+    g_
+    (
+        IOobject
+        (
+            "g",
+            time().constant(),
+            time(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    ),
+    dt_(time().deltaT().value()),
+    dt0_(time().deltaT().value()),
+    curTimeIndex_(-1),
+    positionFilePtr_(NULL),
+    velocityFilePtr_(NULL),
+    accelFilePtr_(NULL)
+{
+    read(dynamicMeshCoeffs_);
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::rigidBody6DoFMotionFvMesh::~rigidBody6DoFMotionFvMesh()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::rigidBody6DoFMotionFvMesh::update()
+{
+    static bool hasWarned = false;
+    
+    vector accel_est, alpha_est;
+    
+    if (order_ <= 1)
+    {
+        accel_est = ( v_ - v0_ ) / dt_;
+        alpha_est = ( omega_ - omega0_ ) / dt_;
+    }
+    else
+    {
+        scalar a0 = (dt0_+2.0*dt_)/dt_/(dt0_+dt_);
+        scalar a1 = -(dt0_+dt_)/dt0_/dt_;
+        scalar a2 = dt_/dt0_/(dt0_+dt_);
+        
+        accel_est = a0*v_ + a1*v0_ + a2*v00_;
+        alpha_est = a0*omega_ + a1*omega0_ + a2*omega00_;
+    }
+    
+    // if new time-step, update old position and velocity
+    if (curTimeIndex_ != time().timeIndex())
+    {
+        x00_ = x0_;
+        v00_ = v0_;
+        theta00_ = theta0_;
+        omega00_ = omega0_;
+        x0_ = x_;
+        v0_ = v_;
+        theta0_ = theta_;
+        omega0_ = omega_;
+        dt0_ = dt_;
+    }
+
+    dt_ = time().deltaT().value();
+    
+    // generate forces dictionary and calculate forces and moments
+    dictionary forcesDict = dynamicMeshCoeffs_.subDict("forces");
+    forcesDict.remove("CofR");
+    forcesDict.add("CofR",(CofG_+x0_));
+    
+    forces f
+    (
+        "forces",
+        *this,
+        forcesDict
+    );
+    
+    f.calcForcesMoment();
+
+    vector F = f.forceEff();  // fluid force
+    vector M = f.momentEff();  // fluid moment about CofG
+    
+    PstreamBuffers buf(Pstream::defaultCommsType);
+    if (Pstream::master())
+    {
+        // rotate moments into body coordinate system
+        quaternion rot(theta_.x(), theta_.y(), theta_.z());
+        M = rot.invTransform(M);
+        
+        // apply gravitational force
+        F += mass_*g_.value();
+        
+        // apply spring and damper forces
+        F.x() -= (k_.x()*x0_.x()+c_.x()*v0_.x());
+        F.y() -= (k_.y()*x0_.y()+c_.y()*v0_.y());
+        F.z() -= (k_.z()*x0_.z()+c_.z()*v0_.z());
+        M.x() -= (K_.x()*theta0_.x()+C_.x()*omega0_.x());
+        M.y() -= (K_.y()*theta0_.y()+C_.y()*omega0_.y());
+        M.z() -= (K_.z()*theta0_.z()+C_.z()*omega0_.z());
+        
+        // apply estimates of added mass force
+        F.x() += m_a_.x()*accel_est.x();
+        F.y() += m_a_.y()*accel_est.y();
+        F.z() += m_a_.z()*accel_est.z();    
+        M.x() += I_a_.x()*alpha_est.x();
+        M.y() += I_a_.y()*alpha_est.y();
+        M.z() += I_a_.z()*alpha_est.z();
+        
+        // calculate new accelerations
+        vector acceleration(vector::zero);
+        acceleration.x() = F.x() / ( mass_ + m_a_.x() );
+        acceleration.y() = F.y() / ( mass_ + m_a_.y() );
+        acceleration.z() = F.z() / ( mass_ + m_a_.z() );
+        acceleration.x() *= translationFree_.x();
+        acceleration.y() *= translationFree_.y();
+        acceleration.z() *= translationFree_.z();
+        vector alpha = inv( I_ + symmTensor(I_a_.x(), 0, 0, I_a_.y(), 0, I_a_.z() ) ) & M;
+        alpha.x() *= rotationFree_.x();    
+        alpha.y() *= rotationFree_.y();    
+        alpha.z() *= rotationFree_.z();
+        
+        vector vTilde, omegaTilde, xTilde, thetaTilde;
+        if (order_ <= 1)
+        {
+            // velocities updated explicitly
+            vTilde = v0_ + acceleration*dt_;
+            omegaTilde = omega0_ + alpha*dt_;
+            
+            // positions updated implicity
+            xTilde = x0_ + vTilde*dt_;
+            thetaTilde = theta0_ + omegaTilde*dt_;
+        }
+        else
+        {
+            scalar a0 = (dt0_+2.0*dt_)/dt_/(dt0_+dt_);
+            scalar a1 = -(dt0_+dt_)/dt0_/dt_;
+            scalar a2 = dt_/dt0_/(dt0_+dt_);
+            
+            // velocities updated explicitly
+            vTilde = (-a1*v0_ - a2*v00_ + acceleration)/a0;
+            omegaTilde = (-a1*omega0_ - a2*omega00_ + alpha)/a0;
+            
+            // positions updated implicity
+            xTilde = (-a1*x0_ - a2*x00_ + vTilde)/a0;
+            thetaTilde = (-a1*theta0_ - a2*theta00_ + omegaTilde)/a0;
+        }
+        
+        // explicitly relax updates
+        v_ = beta_*vTilde + (1 - beta_)*v_;
+        omega_ = beta_*omegaTilde + (1 - beta_)*omega_;
+        x_ = beta_*xTilde + (1 - beta_)*x_;
+        theta_ = beta_*thetaTilde + (1 - beta_)*theta_;
+        
+        // create the recording files if not already done
+        makeFiles();
+    
+        // write out position, velocity, and acceleration
+        scalar t = time().value();
+        positionFilePtr_() << t << tab << x_ << tab << theta_ << endl;
+        velocityFilePtr_() << t << tab << v_ << tab << omega_ << endl;
+        accelFilePtr_() << t << tab << (v_-v0_)/dt_ << tab << (omega_-omega0_)/dt_ << endl;
+        
+        // scatter output to different processors
+        for (int ii = 0; ii < Pstream::nProcs(); ii++)
+        {
+            if (ii != Pstream::myProcNo())
+            {
+                UOPstream toNeighbor(ii, buf);
+                vectorField out(2);
+                out[0] = x_;
+                out[1] = theta_;
+                toNeighbor << out;
+            }
+        }
+        buf.finishedSends();
+    }
+    else
+    {
+        buf.finishedSends();
+        UIPstream fromMaster(Pstream::masterNo(), buf);
+        vectorField in(2, vector::zero);
+        
+        fromMaster >> in;
+        x_ = in[0];
+        theta_ = in[1];
+    }
+    
+    // update current time index
+    if (curTimeIndex_ != time().timeIndex())
+        curTimeIndex_ = time().timeIndex();
+    
+    // generate transformation
+    quaternion R(theta_.x(), theta_.y(), theta_.z());
+    septernion TR(septernion(CofG_ + x_)*R*septernion(-CofG_));
+    
+    scalar t = time().value();
+    Info<< "rigidBody6DoFMotionFvMesh::update(): "
+        << "Time = " << t << " transformation: " << TR << endl;
+    
+    // transform the mesh
+    fvMesh::movePoints
+    (
+        transform(TR, undisplacedPoints_)
+    );
+
+    // update velocity boundary conditions
+    if (foundObject<volVectorField>("U"))
+    {
+        const_cast<volVectorField&>(lookupObject<volVectorField>("U"))
+            .correctBoundaryConditions();
+    }
+    else if (!hasWarned)
+    {
+        hasWarned = true;
+
+        WarningIn("rigidBody6DoFMotionFvMesh::update()")
+            << "Did not find volVectorField U."
+            << " Not updating U boundary conditions." << endl;
+    }
+
+    return true;
+}
+
+// read in rigid body properties from a dictionary
+bool Foam::rigidBody6DoFMotionFvMesh::read(const dictionary& coeffs)
+{
+    coeffs.lookup("mass") >> mass_;
+    coeffs.lookup("CofG") >> CofG_;
+    coeffs.lookup("I") >> I_;
+    coeffs.lookup("x0") >> x0_;
+    coeffs.lookup("v0") >> v0_;
+    coeffs.lookup("theta0") >> theta0_;
+    coeffs.lookup("omega0") >> omega0_;
+    x_ = x0_;
+    v_ = v0_;
+    theta_ = theta0_;
+    omega_ = omega0_;
+    x00_ = coeffs.lookupOrDefault<vector>("x00", x0_);
+    v00_ = coeffs.lookupOrDefault<vector>("v00", v0_);
+    theta00_ = coeffs.lookupOrDefault<vector>("theta00", theta0_);
+    omega00_ = coeffs.lookupOrDefault<vector>("omega00", omega0_);
+    
+    m_a_ = coeffs.lookupOrDefault<vector>("m_a", vector::zero);
+    I_a_ = coeffs.lookupOrDefault<vector>("I_a", vector::zero);
+    
+    coeffs.lookup("translationFree") >> translationFree_;
+    coeffs.lookup("rotationFree") >> rotationFree_;
+    
+    coeffs.lookup("k") >> k_;
+    coeffs.lookup("K_t") >> K_;
+    coeffs.lookup("c") >> c_;
+    coeffs.lookup("C_t") >> C_;
+    
+    coeffs.lookup("relaxation") >> beta_;
+    
+    order_ = coeffs.lookupOrDefault<label>("order", 1);
+    
+    return true;
+}
+
+
+// ************************************************************************* //

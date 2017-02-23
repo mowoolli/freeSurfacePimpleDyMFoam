@@ -1,0 +1,5 @@
+OBJECTS = \
+$(OBJECTS_DIR)/tankFixedMotionFunction.o\
+$(OBJECTS_DIR)/integratedVelocityMotionFunction.o\
+$(OBJECTS_DIR)/propellerCrashbackMotionFunction.o\
+$(OBJECTS_DIR)/propellerMotionFunction.o

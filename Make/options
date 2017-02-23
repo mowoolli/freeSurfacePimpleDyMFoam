@@ -1,0 +1,29 @@
+EXE_INC = \
+    -I$(LIB_SRC)/VectorN/lnInclude \
+    -I$(LIB_SRC)/turbulenceModels \
+    -I$(LIB_SRC)/turbulenceModels/incompressible/RAS/RASModel \
+    -I$(LIB_SRC)/turbulenceModels/incompressible/turbulenceModel \
+    -I$(LIB_SRC)/transportModels \
+    -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/fvOptions/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
+    -IsurfaceHeightSolver
+    
+EXE_LIBS = \
+    -lincompressibleTurbulenceModel \
+    -lincompressibleRASModels \
+    -lincompressibleTransportModels \
+    -lincompressibleLESModels \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lfvOptions \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
+    -ldynamicMesh \
+    -lregionModels \
+    -lsampling 

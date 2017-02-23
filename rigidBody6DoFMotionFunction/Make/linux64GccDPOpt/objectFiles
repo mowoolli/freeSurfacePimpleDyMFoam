@@ -1,0 +1,11 @@
+OBJECTS = \
+$(OBJECTS_DIR)/tankFixedMotionFunction.o\
+$(OBJECTS_DIR)/integratedVelocityMotionFunction.o\
+$(OBJECTS_DIR)/tankFreeMotionFunction.o\
+$(OBJECTS_DIR)/propellerMotionFunction.o\
+$(OBJECTS_DIR)/PiroSolidBodyMotionFvMesh.o\
+$(OBJECTS_DIR)/tankFreeMultiSolidBodyMotionFvMesh.o\
+$(OBJECTS_DIR)/PiroSolidBodyMotionFunction.o\
+$(OBJECTS_DIR)/newPiroSolidBodyMotionFunction.o\
+$(OBJECTS_DIR)/rigidBody6DoFMotion.o\
+$(OBJECTS_DIR)/surfaceRegionMotion.o

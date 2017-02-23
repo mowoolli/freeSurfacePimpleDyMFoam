@@ -1,0 +1,126 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|       o          |                                                          |
+|    o     o       | OpenFOAM (Engys Edition):                                |
+|   o   O   o      | Version: 2.2_engysEdition-beta                           |
+|    o     o       | Web:     http://www.engys.com                            |
+|       o          |                                                          |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+PIMPLE
+{
+    momentumPredictor yes;
+    nOuterCorrectors 1;
+    nCorrectors     2;
+    nNonOrthogonalCorrectors 0;
+    correctPhi      yes;
+
+    moveMeshOuterCorrectors no;
+
+}
+
+
+SIMPLE
+{
+}
+
+
+solvers
+{
+    p
+    {
+        solver          GAMG;
+        agglomerator    faceAreaPair;
+        mergeLevels     1;
+        cacheAgglomeration true;
+        nCellsInCoarsestLevel 200;
+        tolerance       1e-07;
+        relTol          0.01;
+        smoother        GaussSeidel;
+        nPreSweeps      0;
+        nPostSweeps     2;
+        nFinestSweeps   2;
+        minIter         1;
+    }
+    pcorr
+    {
+        solver           GAMG;
+        tolerance        0.02;
+        relTol           0;
+        smoother         GaussSeidel;
+        nPreSweeps       0;
+        nPostSweeps      2;
+        cacheAgglomeration true;
+        agglomerator     faceAreaPair;
+        nCellsInCoarsestLevel 10;
+        mergeLevels      1;
+    }
+
+    U
+    {
+        solver          PBiCG;
+        smoother        GaussSeidel;
+        tolerance       1e-06;
+        relTol          0.01;
+        minIter         1;
+        preconditioner  DILU;
+    }
+
+    nuTilda
+    {
+        solver          smoothSolver;
+        smoother        GaussSeidel;
+        tolerance       1e-06;
+        relTol          0.1;
+        minIter         1;
+    }
+
+    zeta
+    {
+        solver          smoothSolver;
+        smoother        GaussSeidel;
+        tolerance       1e-06;
+        relTol          0.01;
+        nSweeps         1;
+    }
+
+    pFinal
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        relTol          0;
+    }
+
+    "(U|nuTilda|nut)Final"
+    {
+        $U;
+        tolerance       1e-05;
+        relTol          0;
+    }
+}
+
+relaxationFactors
+{
+    fields
+    {
+//        p               0.3;
+//        U               0.7
+    }
+    equations
+    {
+        U               1;
+        nuTilda         1;
+        zeta            1;
+    }
+}
+
+
+// ************************************************************************* //

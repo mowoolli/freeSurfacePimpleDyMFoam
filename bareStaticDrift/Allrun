@@ -1,0 +1,28 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get application name
+application=`getApplication`
+
+# Generate mesh
+runApplication surfaceFeatureExtract
+runApplication snappyHexMesh -overwrite
+
+# Extrude surface region
+runApplication topoSet
+runApplication extrudeToRegionMesh 
+    cp -r 0.001/polyMesh 0/.
+    cp -r 0.001/surface/polyMesh 0/surface/.
+    rm -r 0.001
+
+# Run freeSurfacePimpleDyMFoam
+runApplication $application
+
+# Transfer forces to ship reference frame
+cp postProcessing/forces/0/forces.dat .
+python SD_forceTrans.py forces.dat forcesShipFrame.dat
+
+# ----------------------------------------------------------------- end-of-file

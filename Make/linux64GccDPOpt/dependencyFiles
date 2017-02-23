@@ -1,0 +1,5 @@
+DEPENDENCIES = \
+surfaceHeightSolver/surfaceHeightSolver.dep\
+freeSurfacePressure/freeSurfacePressureFvPatchScalarField.dep\
+freeSurfaceHeight/freeSurfaceHeightFvPatchScalarField.dep\
+freeSurfacePimpleDyMFoam.dep

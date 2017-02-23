@@ -1,0 +1,30 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.x                                 |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      motionProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh tankFixedFvMesh;
+
+tankFixedFvMeshCoeffs
+{
+    tr               4;                       // Ramp time (half cosine ramp)
+    Ufinal           (1.5 0 0);   // Final velocity vector
+    swayAmp          (0 0 0);                 // Amplitude for sway motion
+    yawAmp           (0 0 0);                 // Angular amplitude for yaw motion
+    yawPhase         0;                       // Phase angle between yaw and sway motion (pi/2 for pure yaw)
+    omega            0;                       // Frequency for sway and yaw motions
+    CofG             (0 0 0);                 // Center of gravity and rotation
+}
+
+// ************************************************************************* //

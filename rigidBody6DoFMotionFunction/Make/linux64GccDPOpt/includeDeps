@@ -1,0 +1,10 @@
+include tankFixedMotionFunction/tankFixedMotionFunction.dep
+include integratedVelocityMotionFunction/integratedVelocityMotionFunction.dep
+include tankFreeMotionFunction/tankFreeMotionFunction.dep
+include propellerMotionFunction/propellerMotionFunction.dep
+include PiroSolidBodyMotionFvMesh/PiroSolidBodyMotionFvMesh.dep
+include PiroSolidBodyMotionFvMesh/tankFreeMultiSolidBodyMotionFvMesh.dep
+include $(solidBodyMotionFunctions)/PiroSolidBodyMotionFunction/PiroSolidBodyMotionFunction.dep
+include $(solidBodyMotionFunctions)/PiroSolidBodyMotionFunction/newPiroSolidBodyMotionFunction.dep
+include $(solidBodyMotionFunctions)/rigidBody6DoFMotion/rigidBody6DoFMotion.dep
+include $(solidBodyMotionFunctions)/surfaceRegionMotion/surfaceRegionMotion.dep
